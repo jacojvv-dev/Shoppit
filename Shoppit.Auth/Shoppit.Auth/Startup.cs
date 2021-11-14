@@ -15,6 +15,7 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Identity.UI.Services;
 using Shoppit.Auth.Entities;
 using Shoppit.Auth.Services;
+using Shoppit.Auth.Settings;
 
 namespace Shoppit.Auth
 {
@@ -37,8 +38,11 @@ namespace Shoppit.Auth
                     options => options.SignIn.RequireConfirmedAccount = true
                 )
                 .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
+                .AddDefaultTokenProviders()
+                .AddDefaultUI();
 
+            services.Configure<SendGridSettings>(Configuration.GetSection("Sendgrid"));
+            
             services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddRazorPages();
