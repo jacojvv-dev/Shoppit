@@ -33,7 +33,7 @@ namespace Shoppit.Auth.Seeders
                 {
                     ClientId = "storefront",
                     DisplayName = "Storefront",
-                    RedirectUris = {new Uri("https://oauth.pstmn.io/v1/callback"), new Uri("https://localhost:4200")},
+                    RedirectUris = {new Uri("https://oauth.pstmn.io/v1/callback"), new Uri("http://localhost:4200")},
                     Permissions =
                     {
                         OpenIddictConstants.Permissions.Endpoints.Authorization,

@@ -79,6 +79,16 @@ namespace Shoppit.Auth
             services.AddScoped<IEmailSender, EmailSender>();
 
             services.AddHostedService<OpeniddictSeeder>();
+            services.AddCors(options =>
+            {
+                // this is obviously not production ready
+                options.AddDefaultPolicy(policy => policy
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin()
+                );
+            });
+
 
             services.AddRazorPages();
         }
@@ -96,10 +106,12 @@ namespace Shoppit.Auth
                 app.UseHsts();
             }
 
+
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 
             app.UseRouting();
+            app.UseCors();
 
             app.UseAuthentication();
             app.UseAuthorization();
