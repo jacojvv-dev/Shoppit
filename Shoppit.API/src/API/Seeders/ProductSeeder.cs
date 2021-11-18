@@ -110,7 +110,7 @@ namespace API.Seeders
 
             var blobServiceClient = scope.ServiceProvider.GetRequiredService<BlobServiceClient>();
             var containerClient = blobServiceClient.GetBlobContainerClient("shoppit-images");
-            await containerClient.CreateIfNotExistsAsync(cancellationToken: cancellationToken);
+            await containerClient.CreateIfNotExistsAsync(PublicAccessType.Blob, cancellationToken: cancellationToken);
 
             var httpHeaders = new BlobHttpHeaders()
             {

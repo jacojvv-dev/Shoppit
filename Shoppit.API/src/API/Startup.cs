@@ -1,12 +1,16 @@
+using API.Exceptions;
+using API.Mapping;
 using API.Seeders;
 using Azure.Storage.Blobs;
 using Data;
+using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.OpenApi.Models;
 using OpenIddict.Validation.AspNetCore;
 
 namespace API
@@ -41,11 +45,23 @@ namespace API
                     options.UseAspNetCore();
                 });
 
+            services.AddAutoMapper(cfg =>
+            {
+                AutoMapperBase.AddMappings(cfg, Configuration["CdnHost"]);
+            });
+            
             services.AddSingleton(new BlobServiceClient(Configuration.GetConnectionString("Storage")));
 
             services.AddHostedService<ProductSeeder>();
 
-            services.AddControllers();
+            services.AddHttpContextAccessor();
+
+            services.AddMediatR(typeof(Startup));
+            services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"}); });
+            services.AddControllers(opts =>
+            {
+                opts.Filters.Add(new ApplicationExceptionFilter());
+            }).AddDataAnnotationsLocalization();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -53,6 +69,8 @@ namespace API
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
+                app.UseSwagger();
+                app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "API v1"));
             }
 
             app.UseHttpsRedirection();
