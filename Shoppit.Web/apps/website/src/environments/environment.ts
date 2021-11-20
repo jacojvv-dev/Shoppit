@@ -5,6 +5,11 @@
 export const environment = {
   production: false,
   apiRoute: 'https://localhost:5003',
+  authentication: {
+    issuer: 'https://localhost:5001/',
+    clientId: 'storefront',
+    scopes: 'openid offline_access api',
+  },
 };
 
 /*
