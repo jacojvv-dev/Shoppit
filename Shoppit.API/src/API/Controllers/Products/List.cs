@@ -16,17 +16,8 @@ namespace API.Controllers.Products
     {
         public class Query : IRequest<List<ProductResponse>>
         {
-            /// <summary>
-            /// Query to search by
-            /// </summary>
             public string SearchQuery { get; set; }
-            /// <summary>
-            /// Page to retrieve
-            /// </summary>
             public int Page { get; set; }
-            /// <summary>
-            /// Amount of items to retrieve per page
-            /// </summary>
             public int PerPage { get; set; }
         }
 

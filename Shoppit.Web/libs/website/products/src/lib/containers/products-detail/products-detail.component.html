@@ -1,0 +1,26 @@
+<ng-container *ngIf="selectedProduct$ | async as product; else loading">
+  <div class="row">
+    <div class="col-md-6">
+      <img [src]="product.images[0].url" alt="" />
+    </div>
+    <div class="col-md-6">
+      <h1>{{ product.name }}</h1>
+      <h4>{{ product.price | currency: 'ZAR':'R' }}</h4>
+      <p>{{ product.description }}</p>
+    </div>
+  </div>
+
+  <table
+    *ngIf="product.metadata"
+    class="table table-striped product-metadata-table"
+  >
+    <tr *ngFor="let entry of product.metadata">
+      <td class="product-metadata-key-value">
+        <strong>{{ entry.key }}</strong>
+      </td>
+      <td class="product-metadata-key-value">{{ entry.value }}</td>
+    </tr>
+  </table>
+</ng-container>
+
+<ng-template #loading> Loading, please wait </ng-template>

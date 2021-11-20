@@ -10,6 +10,7 @@ namespace Domain.Entities
     {
         public Guid Id { get; set; }
         public string Name { get; set; }
+        public string Description { get; set; }
         public decimal Price { get; set; }
         public IList<ProductMetadata> ProductMetadata { get; set; }
         public IList<ProductImage> ProductImages { get; set; }

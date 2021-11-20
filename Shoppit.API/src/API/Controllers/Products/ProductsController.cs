@@ -21,5 +21,13 @@ namespace API.Controllers.Products
         [HttpGet]
         public Task<List<ProductResponse>> List([FromQuery] List.Query query)
             => _mediator.Send(query);
+
+        [HttpGet("{id}")]
+        public async Task<ActionResult<ProductDetailResponse>> Get([FromRoute] Guid id)
+        {
+            var response = await _mediator.Send(new Get.Query() {Id = id});
+            if (response == null) return NotFound();
+            return response;
+        }
     }
 }

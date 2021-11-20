@@ -1,0 +1,20 @@
+<ng-container *ngIf="products$ | async as products; else loading">
+  <div class="row">
+    <div
+      class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+      *ngFor="let product of products"
+    >
+      <div [routerLink]="['/', 'products', product.id]" class="card h-100">
+        <img [src]="product.images[0].url" class="card-img-top" alt="..." />
+        <div class="card-body">
+          <p class="card-title fixed-title">{{ product.name }}</p>
+          <p class="card-text">
+            <strong>{{ product.price | currency: 'ZAR':'R' }}</strong>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-container>
+
+<ng-template #loading> Loading, please wait </ng-template>

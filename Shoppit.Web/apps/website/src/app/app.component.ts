@@ -1,5 +1,6 @@
 import { Component } from '@angular/core';
 import { AuthConfig, OAuthService } from 'angular-oauth2-oidc';
+import { Subscription } from 'rxjs';
 
 export const authCodeFlowConfig: AuthConfig = {
   // Url of the Identity Provider
@@ -35,19 +36,35 @@ export const authCodeFlowConfig: AuthConfig = {
   styleUrls: ['./app.component.css'],
 })
 export class AppComponent {
-  title = 'website';
+  authSvcEventSubscription$: Subscription | undefined;
+
   isLoggedIn = false;
+  collapsed = false;
 
   constructor(private authSvc: OAuthService) {
-    // this.isLoggedIn = authSvc.
-
     authSvc.configure(authCodeFlowConfig);
     authSvc.loadDiscoveryDocumentAndTryLogin();
+  }
 
-    console.log(this.authSvc.getAccessToken());
+  ngOnInit() {
+    this.authSvcEventSubscription$ = this.authSvc.events.subscribe(
+      (ev) => (this.isLoggedIn = this.authSvc.hasValidAccessToken())
+    );
+  }
+
+  toggleNavbar() {
+    this.collapsed = !this.collapsed;
   }
 
   login() {
     this.authSvc.initLoginFlow();
+  }
+
+  logout() {
+    this.authSvc.logOut();
+  }
+
+  ngOnDestroy(): void {
+    this.authSvcEventSubscription$?.unsubscribe();
   }
 }

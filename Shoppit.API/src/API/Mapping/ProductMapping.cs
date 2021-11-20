@@ -11,8 +11,11 @@ namespace API.Mapping
         public ProductMapping(string cdnHost)
         {
             CreateMap<Product, ProductResponse>()
-                .ForMember(x => x.Metadata, opt => opt.MapFrom(src => src.ProductMetadata))
                 .ForMember(x => x.Images, opt => opt.MapFrom(src => src.ProductImages));
+            CreateMap<Product, ProductDetailResponse>()
+                .IncludeBase<Product, ProductResponse>()
+                .ForMember(x => x.Metadata, opt => opt.MapFrom(src => src.ProductMetadata));
+
             CreateMap<ProductMetadata, ProductMetadataResponse>();
             CreateMap<ProductImage, ProductImageResponse>()
                 .ForMember(x => x.Url, opt => opt.MapFrom(src => $"{cdnHost}/shoppit-images/{src.Location}"));

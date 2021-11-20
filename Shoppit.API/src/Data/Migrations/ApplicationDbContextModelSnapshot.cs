@@ -52,6 +52,10 @@ namespace Data.Migrations
                     b.Property<DateTimeOffset>("CreatedAt")
                         .HasColumnType("datetimeoffset");
 
+                    b.Property<string>("Description")
+                        .HasMaxLength(2500)
+                        .HasColumnType("nvarchar(2500)");
+
                     b.Property<string>("Name")
                         .IsRequired()
                         .HasMaxLength(1000)

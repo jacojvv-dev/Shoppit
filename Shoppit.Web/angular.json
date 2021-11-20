@@ -1,6 +1,75 @@
 {
   "version": 1,
   "projects": {
+    "shared-app-config": {
+      "root": "libs/shared/app-config",
+      "sourceRoot": "libs/shared/app-config/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/shared/app-config/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/app-config"],
+          "options": {
+            "jestConfig": "libs/shared/app-config/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "shared-services": {
+      "root": "libs/shared/services",
+      "sourceRoot": "libs/shared/services/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/shared/services/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/services"],
+          "options": {
+            "jestConfig": "libs/shared/services/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
+    "shared-types": {
+      "root": "libs/shared/types",
+      "sourceRoot": "libs/shared/types/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/shared/types/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/types"],
+          "options": {
+            "jestConfig": "libs/shared/types/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "website": {
       "projectType": "application",
       "root": "apps/website",
@@ -20,7 +89,10 @@
               "apps/website/src/favicon.ico",
               "apps/website/src/assets"
             ],
-            "styles": ["apps/website/src/styles.css"],
+            "styles": [
+              "apps/website/src/styles.css",
+              "node_modules/bootstrap/dist/css/bootstrap.min.css"
+            ],
             "scripts": []
           },
           "configurations": {
@@ -94,33 +166,57 @@
       },
       "tags": []
     },
-    "website-e2e": {
-      "root": "apps/website-e2e",
-      "sourceRoot": "apps/website-e2e/src",
-      "projectType": "application",
+    "website-about": {
+      "projectType": "library",
+      "root": "libs/website/about",
+      "sourceRoot": "libs/website/about/src",
+      "prefix": "shoppit",
       "architect": {
-        "e2e": {
-          "builder": "@nrwl/cypress:cypress",
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/website/about"],
           "options": {
-            "cypressConfig": "apps/website-e2e/cypress.json",
-            "devServerTarget": "website:serve:development"
-          },
-          "configurations": {
-            "production": {
-              "devServerTarget": "website:serve:production"
-            }
+            "jestConfig": "libs/website/about/jest.config.js",
+            "passWithNoTests": true
           }
         },
         "lint": {
           "builder": "@nrwl/linter:eslint",
-          "outputs": ["{options.outputFile}"],
           "options": {
-            "lintFilePatterns": ["apps/website-e2e/**/*.{js,ts}"]
+            "lintFilePatterns": [
+              "libs/website/about/src/**/*.ts",
+              "libs/website/about/src/**/*.html"
+            ]
           }
         }
       },
-      "tags": [],
-      "implicitDependencies": ["website"]
+      "tags": []
+    },
+    "website-products": {
+      "projectType": "library",
+      "root": "libs/website/products",
+      "sourceRoot": "libs/website/products/src",
+      "prefix": "shoppit",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/website/products"],
+          "options": {
+            "jestConfig": "libs/website/products/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/website/products/src/**/*.ts",
+              "libs/website/products/src/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": []
     }
   }
 }

@@ -84,6 +84,7 @@ namespace API.Seeders
                 var product = new Product()
                 {
                     Name = seed.Name,
+                    Description = seed.Description,
                     Price = seed.Price,
                     ProductMetadata = seed.Metadata.Select(metadata => new ProductMetadata()
                     {
@@ -131,6 +132,7 @@ namespace API.Seeders
         private class ProductSeed
         {
             [JsonPropertyName("name")] public string Name { get; set; }
+            [JsonPropertyName("description")] public string Description { get; set; }
             [JsonPropertyName("price")] public decimal Price { get; set; }
             [JsonPropertyName("metadata")] public Dictionary<string, string> Metadata { get; set; }
             [JsonPropertyName("images")] public List<string> Images { get; set; }

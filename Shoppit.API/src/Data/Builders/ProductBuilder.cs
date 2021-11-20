@@ -14,6 +14,10 @@ namespace Data.Builders
                 .IsRequired()
                 .HasMaxLength(1000);
             builder.Entity<Product>()
+                .Property(product => product.Description)
+                .IsRequired(false)
+                .HasMaxLength(2500);
+            builder.Entity<Product>()
                 .Property(product => product.Price)
                 .IsRequired()
                 .HasPrecision(19, 4);

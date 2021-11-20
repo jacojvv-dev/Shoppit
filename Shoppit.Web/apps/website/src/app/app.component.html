@@ -1,1 +1,51 @@
-<button (click)="login()">Login</button>
+<nav class="navbar navbar-expand-sm navbar-dark bg-dark">
+  <div class="container-fluid">
+    <a class="navbar-brand" [routerLink]="'/'">Shoppit</a>
+    <button
+      class="navbar-toggler"
+      type="button"
+      data-bs-toggle="collapse"
+      data-bs-target="#mynavbar"
+    >
+      <span class="navbar-toggler-icon" (click)="toggleNavbar()"></span>
+    </button>
+    <div
+      class="collapse navbar-collapse"
+      [ngClass]="{ collapse: collapsed }"
+      id="mynavbar"
+    >
+      <ul class="navbar-nav me-auto">
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="'/'" href="javascript:void(0)"
+            >Home</a
+          >
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" [routerLink]="'about'">About</a>
+        </li>
+      </ul>
+      <div class="d-flex">
+        <button
+          class="btn btn-primary"
+          type="button"
+          (click)="login()"
+          *ngIf="!isLoggedIn"
+        >
+          Login
+        </button>
+        <button
+          class="btn btn-danger"
+          type="button"
+          (click)="logout()"
+          *ngIf="isLoggedIn"
+        >
+          Logout
+        </button>
+      </div>
+    </div>
+  </div>
+</nav>
+
+<div class="container pt-2">
+  <router-outlet></router-outlet>
+</div>

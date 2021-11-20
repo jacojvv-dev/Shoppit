@@ -56,6 +56,15 @@ namespace API
 
             services.AddHttpContextAccessor();
 
+            services.AddCors(options =>
+            {
+                // this is obviously not production ready
+                options.AddDefaultPolicy(policy => policy
+                    .AllowAnyHeader()
+                    .AllowAnyMethod()
+                    .AllowAnyOrigin()
+                );
+            });
             services.AddMediatR(typeof(Startup));
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"}); });
             services.AddControllers(opts =>
@@ -76,7 +85,8 @@ namespace API
             app.UseHttpsRedirection();
 
             app.UseRouting();
-
+            app.UseCors();
+            
             app.UseAuthentication();
             app.UseAuthorization();
 
