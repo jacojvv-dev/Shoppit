@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using API.Extensions;
 using API.Responses.Cart;
+using ApplicationCore.Extensions;
 using AutoMapper;
 using AutoMapper.QueryableExtensions;
 using Data;

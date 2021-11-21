@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
-using API.Controllers.Products;
-using API.Exceptions.Types;
-using API.Extensions;
 using API.Responses.Cart;
+using ApplicationCore.Exceptions;
+using ApplicationCore.Extensions;
 using AutoMapper;
-using AutoMapper.QueryableExtensions;
 using Data;
 using Domain.Entities;
 using MediatR;

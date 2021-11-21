@@ -1,8 +1,8 @@
-﻿using API.Exceptions.Types;
+﻿using ApplicationCore.Exceptions;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Filters;
 
-namespace API.Exceptions
+namespace API.Filters
 {
     public class ApplicationExceptionFilter : IActionFilter, IOrderedFilter
     {

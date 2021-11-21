@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace API.Exceptions.Types
+namespace ApplicationCore.Exceptions
 {
     public class ApplicationInvalidOperationException : Exception
     {

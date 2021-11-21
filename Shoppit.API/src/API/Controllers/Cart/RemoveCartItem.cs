@@ -1,9 +1,7 @@
 ﻿using System;
 using System.Threading;
 using System.Threading.Tasks;
-using API.Exceptions.Types;
-using API.Extensions;
-using API.Responses.Cart;
+using ApplicationCore.Extensions;
 using AutoMapper;
 using Data;
 using Domain.Entities;

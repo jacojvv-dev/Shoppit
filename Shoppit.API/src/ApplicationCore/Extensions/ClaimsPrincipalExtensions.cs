@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Linq;
 using System.Security.Claims;
-using Microsoft.AspNetCore.Authentication;
 using OpenIddict.Abstractions;
 
-namespace API.Extensions
+namespace ApplicationCore.Extensions
 {
     public static class ClaimsPrincipalExtensions
     {
