@@ -41,7 +41,8 @@ namespace API.Extensions
                 });
         }
 
-        public static void AddApplicationOptions(this IServiceCollection serviceCollection,
+        public static void AddApplicationOptions(
+            this IServiceCollection serviceCollection,
             IConfiguration configuration)
         {
             serviceCollection.Configure<ElasticSearchOptions>(configuration.GetSection("ElasticSearch"));

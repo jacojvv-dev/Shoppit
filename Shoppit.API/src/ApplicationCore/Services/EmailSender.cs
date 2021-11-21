@@ -25,7 +25,8 @@ namespace ApplicationCore.Services
             _sendGridSettings = sendGridSettings.Value;
         }
 
-        public Task SendEmailAsync(string email,
+        public Task SendEmailAsync(
+            string email,
             string subject,
             string htmlMessage,
             CancellationToken cancellationToken = default)

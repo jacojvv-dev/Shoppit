@@ -20,13 +20,11 @@ namespace API.Controllers.Cart
 
         public class Handler : IRequestHandler<Command>
         {
-            private readonly IMapper _mapper;
             private readonly ApplicationDbContext _context;
             private readonly IHttpContextAccessor _contextAccessor;
 
-            public Handler(IMapper mapper, ApplicationDbContext context, IHttpContextAccessor contextAccessor)
+            public Handler(ApplicationDbContext context, IHttpContextAccessor contextAccessor)
             {
-                _mapper = mapper;
                 _context = context;
                 _contextAccessor = contextAccessor;
             }
@@ -44,12 +42,12 @@ namespace API.Controllers.Cart
                 return Unit.Value;
             }
 
-            private Task<CartItem> GetCartItem(Command command, Guid userId, CancellationToken token)
+            private Task<CartItem> GetCartItem(Command command, Guid userId, CancellationToken cancellationToken)
                 => _context
                     .CartItems
                     .FirstOrDefaultAsync(
                         item => item.UserId == userId && item.ProductId == command.Id,
-                        cancellationToken: token);
+                        cancellationToken: cancellationToken);
         }
     }
 }

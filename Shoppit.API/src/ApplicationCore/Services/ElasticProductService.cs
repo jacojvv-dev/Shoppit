@@ -30,7 +30,8 @@ namespace ApplicationCore.Services
             _client = client;
         }
 
-        public async Task<IndexResponse> IndexProductAsync(ElasticProduct product,
+        public async Task<IndexResponse> IndexProductAsync(
+            ElasticProduct product,
             CancellationToken cancellationToken = default)
         {
             var indexName = ElasticSearchIndexHelper.GetProductIndexName(_options.IndexPrefix);

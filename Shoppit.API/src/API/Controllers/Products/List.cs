@@ -22,13 +22,11 @@ namespace API.Controllers.Products
 
         public class Handler : IRequestHandler<Query, PaginatedResponse<ProductResponse>>
         {
-            private readonly ApplicationDbContext _context;
             private readonly IMapper _mapper;
             private readonly IElasticProductService _elasticProductService;
 
-            public Handler(ApplicationDbContext context, IMapper mapper, IElasticProductService elasticProductService)
+            public Handler(IMapper mapper, IElasticProductService elasticProductService)
             {
-                _context = context;
                 _mapper = mapper;
                 _elasticProductService = elasticProductService;
             }
@@ -46,8 +44,11 @@ namespace API.Controllers.Products
                         perPage,
                         query.SearchQuery,
                         cancellationToken);
-                var paginatedData =
-                    new PaginatedData<ElasticProduct>(searchResponse.Documents, searchResponse.Total, page, perPage);
+                var paginatedData = new PaginatedData<ElasticProduct>(
+                    searchResponse.Documents,
+                    searchResponse.Total,
+                    page,
+                    perPage);
 
                 return _mapper.Map<PaginatedResponse<ProductResponse>>(paginatedData);
             }

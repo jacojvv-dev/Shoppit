@@ -12,7 +12,9 @@ namespace ApplicationCore.Extensions
         public static IQueryable<CartItem> GetCartItemsForUser(this DbSet<CartItem> dbSet, Guid userId)
             => dbSet.Where(cartItem => cartItem.UserId == userId);
 
-        public static Task<decimal> GetCartTotalForUser(this DbSet<CartItem> dbSet, Guid userId,
+        public static Task<decimal> GetCartTotalForUser(
+            this DbSet<CartItem> dbSet,
+            Guid userId,
             CancellationToken cancellationToken = default)
             => dbSet
                 .GetCartItemsForUser(userId)
