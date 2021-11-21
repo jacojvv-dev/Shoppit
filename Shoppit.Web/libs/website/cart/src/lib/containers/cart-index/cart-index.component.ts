@@ -38,7 +38,6 @@ export class CartIndexComponent implements OnInit {
   }
 
   onCheckoutClicked() {
-    console.log('xxxx');
     this.cartFacade.checkout();
   }
 

@@ -102,7 +102,6 @@ export class CartEffects implements OnInitEffects {
       ofType(CartActions.checkoutCart),
       fetch({
         run: (_) => {
-          console.log('xxx');
           return this.cartService
             .checkout()
             .pipe(map((_) => CartActions.init()));
