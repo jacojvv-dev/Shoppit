@@ -8,6 +8,9 @@ export const PRODUCTS_FEATURE_KEY = 'website-products';
 export interface State extends EntityState<ProductResponse> {
   selectedId?: string | number;
   loaded: boolean;
+  nextPage?: number;
+  previousPage?: number;
+  query?: string;
   error?: string | null;
 }
 
@@ -30,8 +33,13 @@ const productsReducer = createReducer(
     loaded: false,
     error: null,
   })),
-  on(ProductsActions.loadProductsSuccess, (state, { products }) =>
-    productsAdapter.setAll(products, { ...state, loaded: true })
+  on(ProductsActions.loadProductsSuccess, (state, { response }) =>
+    productsAdapter.setAll(response.items, {
+      ...state,
+      loaded: true,
+      nextPage: response.nextPage,
+      previousPage: response.previousPage,
+    })
   ),
   on(ProductsActions.loadProductsFailure, (state, { error }) => ({
     ...state,
@@ -47,6 +55,19 @@ const productsReducer = createReducer(
   on(ProductsActions.loadProductDetailFailure, (state, { error }) => ({
     ...state,
     error,
+  })),
+  on(ProductsActions.nextPage, (state) => ({
+    ...state,
+    loaded: false,
+  })),
+  on(ProductsActions.previousPage, (state) => ({
+    ...state,
+    loaded: false,
+  })),
+  on(ProductsActions.search, (state, { query }) => ({
+    ...state,
+    query,
+    loaded: false,
   }))
 );
 

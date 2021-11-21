@@ -14,6 +14,8 @@ import { map, tap, withLatestFrom } from 'rxjs/operators';
 import * as ProductsActions from './products.actions';
 import * as ProductsFeature from './products.reducer';
 
+const PER_PAGE = '10';
+
 @Injectable()
 export class ProductsEffects implements OnInitEffects {
   init$ = createEffect(() =>
@@ -22,10 +24,10 @@ export class ProductsEffects implements OnInitEffects {
       fetch({
         run: (action) => {
           return this.productService
-            .listProducts()
+            .listProducts('1', PER_PAGE)
             .pipe(
               map((response) =>
-                ProductsActions.loadProductsSuccess({ products: response })
+                ProductsActions.loadProductsSuccess({ response })
               )
             );
         },
@@ -63,6 +65,84 @@ export class ProductsEffects implements OnInitEffects {
         onError: (action, error) => {
           console.error('Error', error);
           return ProductsActions.loadProductDetailFailure({ error });
+        },
+      })
+    )
+  );
+
+  loadNextPage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProductsActions.nextPage),
+      withLatestFrom(this.store),
+      fetch({
+        run: (action, state: any) => {
+          const {
+            ['website-products']: { nextPage, PER_PAGE, query },
+          } = state;
+
+          return this.productService
+            .listProducts(nextPage, PER_PAGE)
+            .pipe(
+              map((response) =>
+                ProductsActions.loadProductsSuccess({ response })
+              )
+            );
+        },
+        onError: (action, error) => {
+          console.error('Error', error);
+          return ProductsActions.loadProductsFailure({ error });
+        },
+      })
+    )
+  );
+
+  loadPreviousPage$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProductsActions.previousPage),
+      withLatestFrom(this.store),
+      fetch({
+        run: (action, state: any) => {
+          const {
+            ['website-products']: { previousPage, query },
+          } = state;
+
+          return this.productService
+            .listProducts(previousPage, PER_PAGE, query)
+            .pipe(
+              map((response) =>
+                ProductsActions.loadProductsSuccess({ response })
+              )
+            );
+        },
+        onError: (action, error) => {
+          console.error('Error', error);
+          return ProductsActions.loadProductsFailure({ error });
+        },
+      })
+    )
+  );
+
+  search$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(ProductsActions.search),
+      withLatestFrom(this.store),
+      fetch({
+        run: (action, state: any) => {
+          const {
+            ['website-products']: { query },
+          } = state;
+
+          return this.productService
+            .listProducts('1', PER_PAGE, query)
+            .pipe(
+              map((response) =>
+                ProductsActions.loadProductsSuccess({ response })
+              )
+            );
+        },
+        onError: (action, error) => {
+          console.error('Error', error);
+          return ProductsActions.loadProductsFailure({ error });
         },
       })
     )

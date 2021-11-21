@@ -1,11 +1,11 @@
 import { createAction, props } from '@ngrx/store';
-import { ProductResponse } from '@shoppit/shared/types';
+import { PaginatedResponse, ProductResponse } from '@shoppit/shared/types';
 
 export const init = createAction('[Products Page] Init');
 
 export const loadProductsSuccess = createAction(
   '[Products/API] Load Products Success',
-  props<{ products: ProductResponse[] }>()
+  props<{ response: PaginatedResponse<ProductResponse> }>()
 );
 
 export const loadProductsFailure = createAction(
@@ -31,4 +31,11 @@ export const loadProductDetailSuccess = createAction(
 export const loadProductDetailFailure = createAction(
   '[Products/API] Load Product Detail Failure',
   props<{ error: any }>()
+);
+
+export const nextPage = createAction('[Products Page] Next Page');
+export const previousPage = createAction('[Products Page] Previous Page');
+export const search = createAction(
+  '[Products Page] Search',
+  props<{ query: string }>()
 );

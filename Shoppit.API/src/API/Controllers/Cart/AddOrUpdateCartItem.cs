@@ -1,4 +1,5 @@
 ﻿using System;
+using System.ComponentModel.DataAnnotations;
 using System.Threading;
 using System.Threading.Tasks;
 using API.Responses.Cart;
@@ -17,7 +18,9 @@ namespace API.Controllers.Cart
     {
         public class Command : IRequest<CartItemResponse>
         {
+            [Required]
             public Guid ProductId { get; set; }
+            [Required]
             public int Quantity { get; set; }
         }
 

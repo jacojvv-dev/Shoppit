@@ -3,10 +3,13 @@ using System.Collections.Generic;
 using System.IO;
 using System.IO.Compression;
 using System.Linq;
+using System.Security.Principal;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using System.Threading;
 using System.Threading.Tasks;
+using ApplicationCore.Models;
+using ApplicationCore.Services;
 using Azure.Storage.Blobs;
 using Azure.Storage.Blobs.Models;
 using Data;
@@ -14,11 +17,12 @@ using Domain.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Nest;
 
 namespace API.Seeders
 {
     /// <summary>
-    /// This seeder exists solely for the purposes of this assessment and would
+    /// This seeder exists solely for the purposes of this demo and would
     /// not be present in a production system
     /// </summary>
     public class ProductSeeder : IHostedService
@@ -37,8 +41,10 @@ namespace API.Seeders
 
             await SeedProductData(seedData, cancellationToken);
             await EnsureImages(seedData, imageFolderPath, cancellationToken);
+            await EnsureElasticSearchIndexes(cancellationToken);
+            await IndexElasticSearch(cancellationToken);
         }
-        
+
         public Task StopAsync(CancellationToken cancellationToken) => Task.CompletedTask;
 
         private (string productJsonPath, string imageFolderPath) ExtractProductZipFile()
@@ -128,6 +134,36 @@ namespace API.Seeders
                     await blobClient.UploadAsync(fs, httpHeaders, cancellationToken: cancellationToken);
             }
         }
+
+        private async Task EnsureElasticSearchIndexes(CancellationToken cancellationToken)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var context = scope.ServiceProvider.GetRequiredService<IElasticSearchService>();
+
+            await context.EnsureIndexes(cancellationToken);
+        }
+
+
+        private async Task IndexElasticSearch(CancellationToken cancellationToken)
+        {
+            using var scope = _serviceProvider.CreateScope();
+            var elasticProductService = scope.ServiceProvider.GetRequiredService<IElasticProductService>();
+            var context = scope.ServiceProvider.GetRequiredService<ApplicationDbContext>();
+
+            // this is bad - but - this will not exist in a production environment
+            var products = await context.Products
+                .Include(product => product.ProductImages)
+                .Include(product => product.ProductMetadata)
+                .ToListAsync(cancellationToken: cancellationToken);
+
+
+            var tasks = products
+                .Select(product =>
+                    elasticProductService.IndexProductAsync(new ElasticProduct(product), cancellationToken))
+                .ToList();
+            await Task.WhenAll(tasks);
+        }
+
 
         private class ProductSeed
         {

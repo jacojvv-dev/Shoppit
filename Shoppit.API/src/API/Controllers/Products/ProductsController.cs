@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
+using API.Responses;
 using API.Responses.Product;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
@@ -19,7 +20,7 @@ namespace API.Controllers.Products
         }
 
         [HttpGet]
-        public Task<List<ProductResponse>> List([FromQuery] List.Query query)
+        public Task<PaginatedResponse<ProductResponse>> List([FromQuery] List.Query query)
             => _mediator.Send(query);
 
         [HttpGet("{id}")]

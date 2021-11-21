@@ -1,5 +1,22 @@
-<ng-container *ngIf="products$ | async as products; else loading">
-  <div class="row">
+<ng-container *ngIf="loaded$ | async; else loading">
+  <div class="input-group mb-3">
+    <input
+      type="text"
+      class="form-control"
+      placeholder="Search"
+      [(ngModel)]="searchTerm"
+    />
+    <button
+      class="btn btn-success ml-1"
+      type="button"
+      id="button-addon2"
+      (click)="search()"
+    >
+      Search
+    </button>
+  </div>
+
+  <div class="row" *ngIf="products$ | async as products; else loading">
     <div
       class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
       *ngFor="let product of products"
@@ -14,6 +31,23 @@
         </div>
       </div>
     </div>
+  </div>
+
+  <div class="mt-4 text-center">
+    <button
+      class="btn btn-primary"
+      *ngIf="previousPage$ | async as previousPage"
+      (click)="onPreviousPageClicked()"
+    >
+      Previous Page
+    </button>
+    <button
+      class="btn btn-primary ml-1"
+      *ngIf="nextPage$ | async as nextPage"
+      (click)="onNextPageClicked()"
+    >
+      Next Page
+    </button>
   </div>
 </ng-container>
 

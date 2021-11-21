@@ -1,4 +1,6 @@
-﻿using AutoMapper;
+﻿using API.Responses;
+using ApplicationCore.Models;
+using AutoMapper;
 
 namespace API.Mapping
 {
@@ -6,7 +8,7 @@ namespace API.Mapping
     {
         public AutoMapperBase()
         {
-            // CreateMap(typeof(PaginatedData<>), typeof(PaginatedResult<>));
+            CreateMap(typeof(PaginatedData<>), typeof(PaginatedResponse<>));
         }
 
         public static void AddMappings(IMapperConfigurationExpression configuration, string cdnHost)

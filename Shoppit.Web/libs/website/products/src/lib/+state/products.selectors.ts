@@ -40,3 +40,13 @@ export const getSelected = createSelector(
   getSelectedId,
   (entities, selectedId) => (selectedId ? entities[selectedId] : undefined)
 );
+
+export const getNextPage = createSelector(
+  getProductsState,
+  (state: State) => state.nextPage
+);
+
+export const getPreviousPage = createSelector(
+  getProductsState,
+  (state: State) => state.previousPage
+);

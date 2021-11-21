@@ -1,17 +1,11 @@
+using API.Extensions;
 using API.Filters;
-using API.Mapping;
-using API.Seeders;
-using Azure.Storage.Blobs;
-using Data;
-using MediatR;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Microsoft.OpenApi.Models;
-using OpenIddict.Validation.AspNetCore;
 
 namespace API
 {
@@ -26,36 +20,14 @@ namespace API
 
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<ApplicationDbContext>(
-                options => options.UseSqlServer(
-                    Configuration.GetConnectionString("DefaultConnection")
-                )
-            );
-
-            services.AddAuthentication(options =>
-            {
-                options.DefaultScheme = OpenIddictValidationAspNetCoreDefaults.AuthenticationScheme;
-            });
-
-            services.AddOpenIddict()
-                .AddValidation(options =>
-                {
-                    options.SetIssuer("https://localhost:5001/");
-                    options.UseSystemNetHttp();
-                    options.UseAspNetCore();
-                });
-
-            services.AddAutoMapper(cfg =>
-            {
-                AutoMapperBase.AddMappings(cfg, Configuration["CdnHost"]);
-            });
+            services.AddDatabase(Configuration.GetConnectionString("DefaultConnection"));
+            services.AddAuthenticationAndOpenIddict(Configuration["Authorization:Issuer"]);
+            services.AddApplicationOptions(Configuration);
+            services.AddApplicationServices(Configuration);
+            services.AddThirdPartyServices(Configuration);
+            services.AddElasticSearch(Configuration);
             
-            services.AddSingleton(new BlobServiceClient(Configuration.GetConnectionString("Storage")));
-
-            services.AddHostedService<ProductSeeder>();
-
             services.AddHttpContextAccessor();
-
             services.AddCors(options =>
             {
                 // this is obviously not production ready
@@ -65,12 +37,10 @@ namespace API
                     .AllowAnyOrigin()
                 );
             });
-            services.AddMediatR(typeof(Startup));
+
             services.AddSwaggerGen(c => { c.SwaggerDoc("v1", new OpenApiInfo {Title = "API", Version = "v1"}); });
-            services.AddControllers(opts =>
-            {
-                opts.Filters.Add(new ApplicationExceptionFilter());
-            }).AddDataAnnotationsLocalization();
+            services.AddControllers(opts => { opts.Filters.Add(new ApplicationExceptionFilter()); })
+                .AddDataAnnotationsLocalization();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)
@@ -86,7 +56,7 @@ namespace API
 
             app.UseRouting();
             app.UseCors();
-            
+
             app.UseAuthentication();
             app.UseAuthorization();
 

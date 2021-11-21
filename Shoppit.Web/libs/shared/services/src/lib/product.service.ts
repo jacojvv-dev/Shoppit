@@ -1,7 +1,7 @@
 import { HttpClient } from '@angular/common/http';
 import { Inject, Injectable } from '@angular/core';
 import { APP_CONFIG } from '@shoppit/shared/app-config';
-import { ProductResponse } from '@shoppit/shared/types';
+import { PaginatedResponse, ProductResponse } from '@shoppit/shared/types';
 @Injectable({
   providedIn: 'root',
 })
@@ -14,23 +14,20 @@ export class ProductService {
     this.base = configuration.apiRoute;
   }
 
-  // page: string = '1', perPage: string = '25', query: string = ''
-  listProducts() {
-    // let params = {
-    //   page,
-    //   perPage,
-    //   query,
-    // };
+  listProducts(
+    page: string = '1',
+    perPage: string = '25',
+    searchQuery?: string
+  ) {
+    let params: Record<string, string> = { page, perPage };
+    if (searchQuery) params = { ...params, searchQuery: searchQuery as string };
 
-    // if (page == null) {
-    //   params['page'] = '1';
-    // // }
-
-    // {
-    //   params,
-    // }
-
-    return this.httpClient.get<ProductResponse[]>(`${this.base}/api/Products`);
+    return this.httpClient.get<PaginatedResponse<ProductResponse>>(
+      `${this.base}/api/Products`,
+      {
+        params,
+      }
+    );
   }
 
   loadProductDetails(id: string) {
