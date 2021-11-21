@@ -22,7 +22,9 @@ export class CartIndexComponent implements OnInit {
     this.summary$ = cartFacade.cartSummary$;
   }
 
-  ngOnInit(): void {}
+  ngOnInit(): void {
+    this.cartFacade.getCart();
+  }
 
   onUpdateClicked(id: string, quantity: number, content: any) {
     this.selectedCartItemId = id;

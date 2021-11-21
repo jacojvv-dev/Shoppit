@@ -24,7 +24,7 @@ export class CartFacade {
     this.store.dispatch(CartActions.removeCartItem({ id }));
   }
 
-  getCartSummary() {
-    this.store.dispatch(CartActions.loadCartSummary());
+  getCart() {
+    this.store.dispatch(CartActions.init());
   }
 }
