@@ -14,7 +14,7 @@ import { map, tap, withLatestFrom } from 'rxjs/operators';
 import * as ProductsActions from './products.actions';
 import * as ProductsFeature from './products.reducer';
 
-const PER_PAGE = '10';
+const PER_PAGE = '8';
 
 @Injectable()
 export class ProductsEffects implements OnInitEffects {
@@ -77,11 +77,11 @@ export class ProductsEffects implements OnInitEffects {
       fetch({
         run: (action, state: any) => {
           const {
-            ['website-products']: { nextPage, PER_PAGE, query },
+            ['website-products']: { nextPage, query },
           } = state;
 
           return this.productService
-            .listProducts(nextPage, PER_PAGE)
+            .listProducts(nextPage, PER_PAGE, query)
             .pipe(
               map((response) =>
                 ProductsActions.loadProductsSuccess({ response })

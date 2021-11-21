@@ -18,7 +18,7 @@
 
   <div class="row" *ngIf="products$ | async as products; else loading">
     <div
-      class="col-xs-12 col-sm-6 col-md-4 col-lg-3"
+      class="col-xs-12 col-sm-6 col-md-4 col-lg-3 mt-2"
       *ngFor="let product of products"
     >
       <div [routerLink]="['/', 'products', product.id]" class="card h-100">
@@ -33,7 +33,7 @@
     </div>
   </div>
 
-  <div class="mt-4 text-center">
+  <div class="mt-4 mb-4 text-center">
     <button
       class="btn btn-primary"
       *ngIf="previousPage$ | async as previousPage"
