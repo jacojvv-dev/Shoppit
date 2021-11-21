@@ -32,7 +32,7 @@ namespace API.Controllers.Cart
                 _contextAccessor = contextAccessor;
             }
 
-            public Task<List<CartItemResponse>> Handle(Query query, CancellationToken token)
+            public Task<List<CartItemResponse>> Handle(Query query, CancellationToken cancellationToken)
             {
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
                 return _context
@@ -40,7 +40,7 @@ namespace API.Controllers.Cart
                     .GetCartItemsForUser(userId)
                     .ProjectTo<CartItemResponse>(_mapper.ConfigurationProvider)
                     .AsNoTracking()
-                    .ToListAsync(token);
+                    .ToListAsync(cancellationToken);
             }
         }
     }

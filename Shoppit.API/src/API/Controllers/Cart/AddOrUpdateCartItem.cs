@@ -18,10 +18,8 @@ namespace API.Controllers.Cart
     {
         public class Command : IRequest<CartItemResponse>
         {
-            [Required]
-            public Guid ProductId { get; set; }
-            [Required]
-            public int Quantity { get; set; }
+            [Required] public Guid ProductId { get; set; }
+            [Required] public int Quantity { get; set; }
         }
 
         public class Handler : IRequestHandler<Command, CartItemResponse>
@@ -37,14 +35,14 @@ namespace API.Controllers.Cart
                 _contextAccessor = contextAccessor;
             }
 
-            public async Task<CartItemResponse> Handle(Command command, CancellationToken token)
+            public async Task<CartItemResponse> Handle(Command command, CancellationToken cancellationToken)
             {
-                await EnsureProductExists(command, token);
+                await EnsureProductExists(command, cancellationToken);
 
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
-                var cartItem = await GetCartItem(command, token, userId) ?? new CartItem();
+                var cartItem = await GetCartItem(command, userId, cancellationToken) ?? new CartItem();
                 var cartItemIsNew = cartItem.ProductId == default;
-                
+
                 cartItem.Quantity = command.Quantity;
                 if (cartItemIsNew)
                 {
@@ -53,28 +51,28 @@ namespace API.Controllers.Cart
                     _context.CartItems.Add(cartItem);
                 }
 
-                await _context.SaveChangesAsync(token);
-                
+                await _context.SaveChangesAsync(cancellationToken);
+
                 if (cartItemIsNew)
-                    cartItem = await GetCartItem(command, token, userId);
+                    cartItem = await GetCartItem(command, userId, cancellationToken);
 
                 return _mapper.Map<CartItemResponse>(cartItem);
             }
 
-            private Task<CartItem> GetCartItem(Command command, CancellationToken token, Guid userId)
+            private Task<CartItem> GetCartItem(Command command, Guid userId, CancellationToken cancellationToken)
                 => _context
                     .CartItems
                     .Include(cartItem => cartItem.Product)
                     .ThenInclude(cartItem => cartItem.ProductImages)
                     .FirstOrDefaultAsync(
                         item => item.UserId == userId && item.ProductId == command.ProductId,
-                        cancellationToken: token);
+                        cancellationToken: cancellationToken);
 
-            private async Task EnsureProductExists(Command command, CancellationToken token)
+            private async Task EnsureProductExists(Command command, CancellationToken cancellationToken)
             {
                 var productExists = await _context
                     .Products
-                    .AnyAsync(product => product.Id == command.ProductId, cancellationToken: token);
+                    .AnyAsync(product => product.Id == command.ProductId, cancellationToken);
                 if (!productExists) throw new ApplicationDataNotFoundException("Product not found");
             }
         }

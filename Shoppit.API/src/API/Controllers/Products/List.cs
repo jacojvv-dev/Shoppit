@@ -33,13 +33,19 @@ namespace API.Controllers.Products
                 _elasticProductService = elasticProductService;
             }
 
-            public async Task<PaginatedResponse<ProductResponse>> Handle(Query query, CancellationToken token)
+            public async Task<PaginatedResponse<ProductResponse>> Handle(
+                Query query,
+                CancellationToken cancellationToken)
             {
                 var page = Math.Clamp(query.Page, 1, int.MaxValue);
                 var perPage = Math.Clamp(query.PerPage, 1, 50);
 
                 var searchResponse =
-                    await _elasticProductService.SearchProductsAsync(page, perPage, query.SearchQuery, token);
+                    await _elasticProductService.SearchProductsAsync(
+                        page,
+                        perPage,
+                        query.SearchQuery,
+                        cancellationToken);
                 var paginatedData =
                     new PaginatedData<ElasticProduct>(searchResponse.Documents, searchResponse.Total, page, perPage);
 

@@ -31,20 +31,20 @@ namespace API.Controllers.Cart
                 _contextAccessor = contextAccessor;
             }
 
-            public async Task<Unit> Handle(Command command, CancellationToken token)
+            public async Task<Unit> Handle(Command command, CancellationToken cancellationToken)
             {
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
-                var cartItem = await GetCartItem(command, token, userId);
+                var cartItem = await GetCartItem(command, userId, cancellationToken);
                 if (cartItem != default)
                 {
                     _context.Remove(cartItem);
-                    await _context.SaveChangesAsync(token);
+                    await _context.SaveChangesAsync(cancellationToken);
                 }
 
                 return Unit.Value;
             }
 
-            private Task<CartItem> GetCartItem(Command command, CancellationToken token, Guid userId)
+            private Task<CartItem> GetCartItem(Command command, Guid userId, CancellationToken token)
                 => _context
                     .CartItems
                     .FirstOrDefaultAsync(

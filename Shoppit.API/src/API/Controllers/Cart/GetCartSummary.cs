@@ -30,12 +30,12 @@ namespace API.Controllers.Cart
                 _contextAccessor = contextAccessor;
             }
 
-            public async Task<CartSummaryResponse> Handle(Query query, CancellationToken token)
+            public async Task<CartSummaryResponse> Handle(Query query, CancellationToken cancellationToken)
             {
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
                 var cartTotal = await _context
                     .CartItems
-                    .GetCartTotalForUser(userId, cancellationToken: token);
+                    .GetCartTotalForUser(userId, cancellationToken: cancellationToken);
 
                 return new CartSummaryResponse(cartTotal);
             }

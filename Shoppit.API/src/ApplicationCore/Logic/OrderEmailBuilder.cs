@@ -32,12 +32,16 @@ namespace ApplicationCore.Logic
             return this;
         }
 
-        public async Task<string> BuildAsync(CancellationToken token = default)
+        public async Task<string> BuildAsync(CancellationToken cancellationToken = default)
         {
             var (orderReceiptTemplatePath, orderReceiptItemTemplatePath) = GetTemplatePaths();
 
-            var orderReceiptTemplateHtml = await File.ReadAllTextAsync(orderReceiptTemplatePath, token);
-            var orderReceiptItemTemplateHtml = await File.ReadAllTextAsync(orderReceiptItemTemplatePath, token);
+            var orderReceiptTemplateHtml = await File.ReadAllTextAsync(
+                orderReceiptTemplatePath,
+                cancellationToken);
+            var orderReceiptItemTemplateHtml = await File.ReadAllTextAsync(
+                orderReceiptItemTemplatePath,
+                cancellationToken);
 
             return ApplyTemplating(orderReceiptItemTemplateHtml, orderReceiptTemplateHtml);
         }

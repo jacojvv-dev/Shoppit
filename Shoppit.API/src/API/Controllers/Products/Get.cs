@@ -29,13 +29,13 @@ namespace API.Controllers.Products
                 _mapper = mapper;
             }
 
-            public Task<ProductDetailResponse> Handle(Query query, CancellationToken token)
+            public Task<ProductDetailResponse> Handle(Query query, CancellationToken cancellationToken)
                 => _context
                     .Products
                     .Where(product => product.Id == query.Id)
                     .ProjectTo<ProductDetailResponse>(_mapper.ConfigurationProvider)
                     .AsNoTracking()
-                    .FirstOrDefaultAsync(token);
+                    .FirstOrDefaultAsync(cancellationToken);
         }
     }
 }

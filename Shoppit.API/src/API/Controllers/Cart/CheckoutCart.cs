@@ -38,25 +38,27 @@ namespace API.Controllers.Cart
                 _emailSender = emailSender;
             }
 
-            public async Task<Unit> Handle(CheckoutCommand checkoutCommand, CancellationToken token)
+            public async Task<Unit> Handle(CheckoutCommand checkoutCommand, CancellationToken cancellationToken)
             {
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
                 var email = _contextAccessor.HttpContext.User.GetUserEmail();
 
-                var cartItems = await GetCartItems(userId, token);
-                var order = await CreateOrderAndClearCart(userId, cartItems, token);
-                await SendOrderConfirmationEmail(cartItems, order.Id, email, token);
+                var cartItems = await GetCartItems(userId, cancellationToken);
+                var order = await CreateOrderAndClearCart(userId, cartItems, cancellationToken);
+                await SendOrderConfirmationEmail(cartItems, order.Id, email, cancellationToken);
 
                 return Unit.Value;
             }
 
-            private async Task<Order> CreateOrderAndClearCart(Guid userId, List<CartItem> cartItems,
-                CancellationToken token)
+            private async Task<Order> CreateOrderAndClearCart(
+                Guid userId,
+                IReadOnlyCollection<CartItem> cartItems,
+                CancellationToken cancellationToken)
             {
                 var order = new Order(userId, cartItems);
                 _context.Orders.Add(order);
                 _context.CartItems.RemoveRange(cartItems);
-                await _context.SaveChangesAsync(token);
+                await _context.SaveChangesAsync(cancellationToken);
                 return order;
             }
 
