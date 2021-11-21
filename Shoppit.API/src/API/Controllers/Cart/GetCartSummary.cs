@@ -12,13 +12,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace API.Controllers.Cart
 {
-    public class GetCart
+    public class GetCartSummary
     {
-        public class Query : IRequest<CartResponse>
+        public class Query : IRequest<CartSummaryResponse>
         {
         }
 
-        public class Handler : IRequestHandler<Query, CartResponse>
+        public class Handler : IRequestHandler<Query, CartSummaryResponse>
         {
             private readonly ApplicationDbContext _context;
             private readonly IMapper _mapper;
@@ -31,14 +31,15 @@ namespace API.Controllers.Cart
                 _contextAccessor = contextAccessor;
             }
 
-            public async Task<CartResponse> Handle(Query query, CancellationToken token)
+            public async Task<CartSummaryResponse> Handle(Query query, CancellationToken token)
             {
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
-                var cartItems = await _context
+                var cartTotal = await _context
                     .CartItems
-                    .GetCartItemsForUser(_mapper, userId, token);
+                    .Where(cartItem => cartItem.UserId == userId)
+                    .SumAsync(cartItem => cartItem.Quantity * cartItem.Product.Price, cancellationToken: token);
 
-                return new CartResponse(cartItems);
+                return new CartSummaryResponse(cartTotal);
             }
         }
     }

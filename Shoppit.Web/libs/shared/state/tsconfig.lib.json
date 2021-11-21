@@ -1,0 +1,10 @@
+{
+  "extends": "./tsconfig.json",
+  "compilerOptions": {
+    "outDir": "../../../dist/out-tsc",
+    "declaration": true,
+    "types": []
+  },
+  "include": ["**/*.ts", "../../../apps/website/src/app/+state/cart.actions.ts"],
+  "exclude": ["**/*.spec.ts"]
+}

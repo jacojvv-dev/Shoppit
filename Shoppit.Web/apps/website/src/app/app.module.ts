@@ -1,5 +1,5 @@
 import { HttpClientModule } from '@angular/common/http';
-import { DEFAULT_CURRENCY_CODE, NgModule } from '@angular/core';
+import { NgModule } from '@angular/core';
 import { BrowserModule } from '@angular/platform-browser';
 import { RouterModule } from '@angular/router';
 import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
@@ -7,6 +7,7 @@ import { EffectsModule } from '@ngrx/effects';
 import { StoreModule } from '@ngrx/store';
 import { StoreDevtoolsModule } from '@ngrx/store-devtools';
 import { APP_CONFIG } from '@shoppit/shared/app-config';
+import * as sharedState from '@shoppit/shared/state';
 import { OAuthModule } from 'angular-oauth2-oidc';
 import { environment } from '../environments/environment';
 import { AppComponent } from './app.component';
@@ -33,6 +34,13 @@ import { AppComponent } from './app.component';
             (module) => module.WebsiteAboutModule
           ),
       },
+      {
+        path: 'cart',
+        loadChildren: () =>
+          import('@shoppit/website/cart').then(
+            (module) => module.WebsiteCartModule
+          ),
+      },
     ]),
     OAuthModule.forRoot({
       resourceServer: {
@@ -43,8 +51,13 @@ import { AppComponent } from './app.component';
     StoreModule.forRoot({}),
     EffectsModule.forRoot(),
     !environment.production ? StoreDevtoolsModule.instrument() : [],
+    StoreModule.forFeature(sharedState.CART_FEATURE_KEY, sharedState.reducer),
+    EffectsModule.forFeature([sharedState.CartEffects]),
   ],
-  providers: [{ provide: APP_CONFIG, useValue: environment }],
+  providers: [
+    { provide: APP_CONFIG, useValue: environment },
+    sharedState.CartFacade,
+  ],
   bootstrap: [AppComponent],
 })
 export class AppModule {}

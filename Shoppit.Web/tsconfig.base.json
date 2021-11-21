@@ -17,8 +17,10 @@
     "paths": {
       "@shoppit/shared/app-config": ["libs/shared/app-config/src/index.ts"],
       "@shoppit/shared/services": ["libs/shared/services/src/index.ts"],
+      "@shoppit/shared/state": ["libs/shared/state/src/index.ts"],
       "@shoppit/shared/types": ["libs/shared/types/src/index.ts"],
       "@shoppit/website/about": ["libs/website/about/src/index.ts"],
+      "@shoppit/website/cart": ["libs/website/cart/src/index.ts"],
       "@shoppit/website/products": ["libs/website/products/src/index.ts"]
     }
   },

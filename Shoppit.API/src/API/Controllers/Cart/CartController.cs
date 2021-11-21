@@ -1,4 +1,5 @@
-﻿using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using System.Threading.Tasks;
 using API.Responses.Cart;
 using MediatR;
 using Microsoft.AspNetCore.Authorization;
@@ -19,11 +20,19 @@ namespace API.Controllers.Cart
         }
 
         [HttpGet]
-        public Task<CartResponse> GetCart([FromQuery] GetCart.Query query)
+        public Task<List<CartItemResponse>> GetCartItems([FromQuery] GetCartItems.Query query)
             => _mediator.Send(query);
 
         [HttpPost]
-        public Task<CartResponse> AddOrUpdateCartItem([FromBody] AddOrUpdateCartItem.Command command)
+        public Task<CartItemResponse> AddOrUpdateCartItem([FromBody] AddOrUpdateCartItem.Command command)
             => _mediator.Send(command);
+
+        [HttpDelete("{id}")]
+        public Task AddOrUpdateCartItem([FromRoute] RemoveCartItem.Command command)
+            => _mediator.Send(command);
+
+        [HttpGet("summary")]
+        public Task<CartSummaryResponse> GetCartSummary()
+            => _mediator.Send(new GetCartSummary.Query());
     }
 }

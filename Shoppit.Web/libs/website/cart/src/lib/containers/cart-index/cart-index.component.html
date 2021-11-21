@@ -1,0 +1,133 @@
+<ng-container *ngIf="loaded$ | async; else loading">
+  <div class="row" *ngIf="cartItems$ | async as cartItems; else loading">
+    <ng-container *ngIf="cartItems.length === 0; else cartItemContainer">
+      You don't current have any items in your cart, go check the&nbsp;
+      <a href="javascript:void(0)" [routerLink]="['/', 'products']">store</a
+      >&nbsp;to find something.
+    </ng-container>
+    <ng-template #cartItemContainer>
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Item</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total</th>
+            <th></th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr *ngFor="let item of cartItems">
+            <td>{{ item.product.name }}</td>
+            <td>{{ item.quantity | number }}</td>
+            <td>{{ item.product.price | currency: 'ZAR':'R' }}</td>
+            <td>
+              {{ item.product.price * item.quantity | currency: 'ZAR':'R' }}
+            </td>
+            <td>
+              <a
+                href="javascript:void(0)"
+                (click)="onUpdateClicked(item.id, item.quantity, updateQuantity)"
+                >Update</a
+              >
+            </td>
+            <td>
+              <a
+                href="javascript:void(0)"
+                class="text-danger"
+                (click)="onRemoveClicked(item.id, removeFromCartConfirmation)"
+                >Remove</a
+              >
+            </td>
+          </tr>
+        </tbody>
+        <tfoot *ngIf="summary$ | async as summary">
+          <tr>
+            <td colspan="3">VAT</td>
+            <td>{{ summary.vat | currency: 'ZAR':'R' }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td colspan="3">Total Before Vat</td>
+            <td>{{ summary.totalWithoutVat | currency: 'ZAR':'R' }}</td>
+            <td colspan="2"></td>
+          </tr>
+          <tr>
+            <td colspan="3">Total</td>
+            <td>{{ summary.total | currency: 'ZAR':'R' }}</td>
+            <td colspan="2"></td>
+          </tr>
+        </tfoot>
+      </table>
+    </ng-template>
+  </div>
+</ng-container>
+
+<ng-template #loading> Loading, please wait </ng-template>
+
+<ng-template #removeFromCartConfirmation let-confirmationModal>
+  <div class="modal-header">
+    <h4 class="modal-title" id="modal-basic-title">Remove cart item</h4>
+    <button
+      type="button"
+      class="close"
+      aria-label="Close"
+      (click)="confirmationModal.dismiss('Cross click')"
+    >
+      <span aria-hidden="true">&times;</span>
+    </button>
+  </div>
+  <div class="modal-body">
+    Are you sure you want to remove this item from your cart?
+  </div>
+  <div class="modal-footer">
+    <button
+      type="button"
+      class="btn btn-outline-danger"
+      (click)="confirmationModal.close('Remove From Cart')"
+    >
+      Remove From Cart
+    </button>
+  </div>
+</ng-template>
+
+<ng-template #updateQuantity let-updateModal>
+  <form #quantityForm="ngForm">
+    <div class="modal-header">
+      <h4 class="modal-title" id="modal-basic-title">Update Cart Item</h4>
+      <button
+        type="button"
+        class="close"
+        aria-label="Close"
+        (click)="updateModal.dismiss('Cross click')"
+      >
+        <span aria-hidden="true">&times;</span>
+      </button>
+    </div>
+    <div class="modal-body">
+      <input
+        type="number"
+        class="form-control"
+        id="quantity"
+        required
+        name="quantity"
+        placeholder="Quantity"
+        [(ngModel)]="quantity"
+        #quantityModel="ngModel"
+        min="1"
+        max="1000"
+      />
+    </div>
+    <div class="modal-footer">
+      <button
+        type="button"
+        class="btn btn-outline-success"
+        [disabled]="quantityModel.invalid"
+        (click)="updateModal.close('Update Quantity')"
+      >
+        Update
+      </button>
+    </div>
+  </form>
+</ng-template>

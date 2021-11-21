@@ -9,7 +9,8 @@ namespace API.Mapping
     {
         public CartItemMapping()
         {
-            CreateMap<CartItem, CartItemResponse>();
+            CreateMap<CartItem, CartItemResponse>()
+                .ForMember(x => x.Id, opt => opt.MapFrom(src => src.Product.Id));
         }
     }
 }

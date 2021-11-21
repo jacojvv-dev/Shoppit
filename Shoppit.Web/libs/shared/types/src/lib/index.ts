@@ -1,3 +1,2 @@
-export * from './ProductImageResponse';
-export * from './ProductMetadataResponse';
-export * from './ProductResponse';
+export * from './requests';
+export * from './responses';

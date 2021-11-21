@@ -47,6 +47,29 @@
       },
       "tags": []
     },
+    "shared-state": {
+      "root": "libs/shared/state",
+      "sourceRoot": "libs/shared/state/src",
+      "projectType": "library",
+      "architect": {
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "outputs": ["{options.outputFile}"],
+          "options": {
+            "lintFilePatterns": ["libs/shared/state/**/*.ts"]
+          }
+        },
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/shared/state"],
+          "options": {
+            "jestConfig": "libs/shared/state/jest.config.js",
+            "passWithNoTests": true
+          }
+        }
+      },
+      "tags": []
+    },
     "shared-types": {
       "root": "libs/shared/types",
       "sourceRoot": "libs/shared/types/src",
@@ -186,6 +209,32 @@
             "lintFilePatterns": [
               "libs/website/about/src/**/*.ts",
               "libs/website/about/src/**/*.html"
+            ]
+          }
+        }
+      },
+      "tags": []
+    },
+    "website-cart": {
+      "projectType": "library",
+      "root": "libs/website/cart",
+      "sourceRoot": "libs/website/cart/src",
+      "prefix": "shoppit",
+      "architect": {
+        "test": {
+          "builder": "@nrwl/jest:jest",
+          "outputs": ["coverage/libs/website/cart"],
+          "options": {
+            "jestConfig": "libs/website/cart/jest.config.js",
+            "passWithNoTests": true
+          }
+        },
+        "lint": {
+          "builder": "@nrwl/linter:eslint",
+          "options": {
+            "lintFilePatterns": [
+              "libs/website/cart/src/**/*.ts",
+              "libs/website/cart/src/**/*.html"
             ]
           }
         }

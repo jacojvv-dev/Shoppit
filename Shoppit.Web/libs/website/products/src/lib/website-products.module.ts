@@ -8,10 +8,12 @@ import { ProductsFacade } from './+state/products.facade';
 import { RouterModule } from '@angular/router';
 import { ProductsIndexComponent } from './containers/products-index/products-index.component';
 import { ProductsDetailComponent } from './containers/products-detail/products-detail.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   imports: [
     CommonModule,
+    FormsModule,
     RouterModule.forChild([
       { path: '', pathMatch: 'full', component: ProductsIndexComponent },
       { path: ':id', component: ProductsDetailComponent },

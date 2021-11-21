@@ -7,7 +7,7 @@
       <div [routerLink]="['/', 'products', product.id]" class="card h-100">
         <img [src]="product.images[0].url" class="card-img-top" alt="..." />
         <div class="card-body">
-          <p class="card-title fixed-title">{{ product.name }}</p>
+          <p class="card-title">{{ product.name }}</p>
           <p class="card-text">
             <strong>{{ product.price | currency: 'ZAR':'R' }}</strong>
           </p>

@@ -18,13 +18,13 @@ namespace API.Controllers.Cart
 {
     public class AddOrUpdateCartItem
     {
-        public class Command :  IRequest<CartResponse>
+        public class Command : IRequest<CartItemResponse>
         {
             public Guid ProductId { get; set; }
             public int Quantity { get; set; }
         }
 
-        public class Handler : IRequestHandler<Command, CartResponse>
+        public class Handler : IRequestHandler<Command, CartItemResponse>
         {
             private readonly IMapper _mapper;
             private readonly ApplicationDbContext _context;
@@ -37,32 +37,35 @@ namespace API.Controllers.Cart
                 _contextAccessor = contextAccessor;
             }
 
-            public async Task<CartResponse> Handle(Command command, CancellationToken token)
+            public async Task<CartItemResponse> Handle(Command command, CancellationToken token)
             {
                 await EnsureProductExists(command, token);
 
-                var userId = Guid.NewGuid(); // _contextAccessor.HttpContext.User.GetUserId();
+                var userId = _contextAccessor.HttpContext.User.GetUserId();
                 var cartItem = await GetCartItem(command, token, userId) ?? new CartItem();
+                var cartItemIsNew = cartItem.ProductId == default;
                 
                 cartItem.Quantity = command.Quantity;
-                if (cartItem.ProductId == default)
+                if (cartItemIsNew)
                 {
                     cartItem.ProductId = command.ProductId;
                     cartItem.UserId = userId;
                     _context.CartItems.Add(cartItem);
                 }
+
                 await _context.SaveChangesAsync(token);
+                
+                if (cartItemIsNew)
+                    cartItem = await GetCartItem(command, token, userId);
 
-                var cartItems = await _context
-                    .CartItems
-                    .GetCartItemsForUser(_mapper, userId, token);
-
-                return new CartResponse(cartItems);
+                return _mapper.Map<CartItemResponse>(cartItem);
             }
 
             private Task<CartItem> GetCartItem(Command command, CancellationToken token, Guid userId)
                 => _context
                     .CartItems
+                    .Include(cartItem => cartItem.Product)
+                    .ThenInclude(cartItem => cartItem.ProductImages)
                     .FirstOrDefaultAsync(
                         item => item.UserId == userId && item.ProductId == command.ProductId,
                         cancellationToken: token);
