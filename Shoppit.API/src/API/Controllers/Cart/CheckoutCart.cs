@@ -1,12 +1,10 @@
 ﻿using System;
-using System.IO;
-using System.Text;
+using System.Collections.Generic;
 using System.Threading;
 using System.Threading.Tasks;
 using ApplicationCore.Extensions;
 using ApplicationCore.Logic;
 using ApplicationCore.Services;
-using AutoMapper;
 using Data;
 using Domain.Entities;
 using MediatR;
@@ -45,22 +43,43 @@ namespace API.Controllers.Cart
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
                 var email = _contextAccessor.HttpContext.User.GetUserEmail();
 
-                var cartItems = await _context
+                var cartItems = await GetCartItems(userId, token);
+                var order = await CreateOrderAndClearCart(userId, cartItems, token);
+                await SendOrderConfirmationEmail(cartItems, order.Id, email, token);
+
+                return Unit.Value;
+            }
+
+            private async Task<Order> CreateOrderAndClearCart(Guid userId, List<CartItem> cartItems,
+                CancellationToken token)
+            {
+                var order = new Order(userId, cartItems);
+                _context.Orders.Add(order);
+                _context.CartItems.RemoveRange(cartItems);
+                await _context.SaveChangesAsync(token);
+                return order;
+            }
+
+            private Task<List<CartItem>> GetCartItems(Guid userId, CancellationToken cancellationToken)
+                => _context
                     .CartItems
                     .GetCartItemsForUser(userId)
                     .Include(item => item.Product)
-                    .ToListAsync(cancellationToken: token);
+                    .ToListAsync(cancellationToken);
 
+            private async Task SendOrderConfirmationEmail(
+                IEnumerable<CartItem> cartItems,
+                int orderNumber,
+                string email,
+                CancellationToken cancellationToken)
+            {
                 var emailHtml = await new OrderEmailBuilder()
                     .WithContentRoot(_hostEnvironment.ContentRootPath)
                     .WithCartItems(cartItems)
-                    .WithOrderNumber(1)
-                    .BuildAsync(token);
+                    .WithOrderNumber(orderNumber)
+                    .BuildAsync(cancellationToken);
 
-
-                await _emailSender.SendEmailAsync(email, "Your order confirmation", emailHtml, token);
-
-                return Unit.Value;
+                await _emailSender.SendEmailAsync(email, "Your order confirmation", emailHtml, cancellationToken);
             }
         }
     }
