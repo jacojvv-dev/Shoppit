@@ -37,7 +37,7 @@ namespace API.Controllers.Cart
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
                 return _context
                     .CartItems
-                    .Where(cartItem => cartItem.UserId == userId)
+                    .GetCartItemsForUser(userId)
                     .ProjectTo<CartItemResponse>(_mapper.ConfigurationProvider)
                     .AsNoTracking()
                     .ToListAsync(token);

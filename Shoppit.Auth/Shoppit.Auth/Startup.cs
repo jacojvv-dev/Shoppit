@@ -105,8 +105,7 @@ namespace Shoppit.Auth
                 app.UseExceptionHandler("/Error");
                 app.UseHsts();
             }
-
-
+            
             app.UseHttpsRedirection();
             app.UseStaticFiles();
 

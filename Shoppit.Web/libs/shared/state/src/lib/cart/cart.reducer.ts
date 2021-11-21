@@ -53,6 +53,14 @@ const cartReducer = createReducer(
   on(CartActions.loadCartSummaryFailure, (state, { error }) => ({
     ...state,
     error,
+  })),
+  on(CartActions.checkoutCart, (state) => ({
+    ...state,
+    loaded: false,
+  })),
+  on(CartActions.checkoutCartFailure, (state, { error }) => ({
+    ...state,
+    error,
   }))
 );
 

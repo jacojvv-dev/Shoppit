@@ -35,8 +35,7 @@ namespace API.Controllers.Cart
                 var userId = _contextAccessor.HttpContext.User.GetUserId();
                 var cartTotal = await _context
                     .CartItems
-                    .Where(cartItem => cartItem.UserId == userId)
-                    .SumAsync(cartItem => cartItem.Quantity * cartItem.Product.Price, cancellationToken: token);
+                    .GetCartTotalForUser(userId, cancellationToken: token);
 
                 return new CartSummaryResponse(cartTotal);
             }

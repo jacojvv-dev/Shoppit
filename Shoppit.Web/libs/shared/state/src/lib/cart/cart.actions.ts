@@ -58,3 +58,10 @@ export const loadCartSummaryFailure = createAction(
   '[Cart/API] Get Cart Summary Failure',
   props<{ error: any }>()
 );
+
+export const checkoutCart = createAction('[Cart Page] Checkout Cart');
+
+export const checkoutCartFailure = createAction(
+  '[Cart/API] Checkout Cart Failure',
+  props<{ error: any }>()
+);

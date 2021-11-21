@@ -97,6 +97,24 @@ export class CartEffects implements OnInitEffects {
     )
   );
 
+  checkoutCart$ = createEffect(() =>
+    this.actions$.pipe(
+      ofType(CartActions.checkoutCart),
+      fetch({
+        run: (_) => {
+          console.log('xxx');
+          return this.cartService
+            .checkout()
+            .pipe(map((_) => CartActions.init()));
+        },
+        onError: (action, error) => {
+          console.error('Error', error);
+          return CartActions.checkoutCartFailure({ error });
+        },
+      })
+    )
+  );
+
   ngrxOnInitEffects(): Action {
     return CartActions.init();
   }

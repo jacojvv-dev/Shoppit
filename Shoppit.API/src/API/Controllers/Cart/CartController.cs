@@ -20,8 +20,8 @@ namespace API.Controllers.Cart
         }
 
         [HttpGet]
-        public Task<List<CartItemResponse>> GetCartItems([FromQuery] GetCartItems.Query query)
-            => _mediator.Send(query);
+        public Task<List<CartItemResponse>> GetCartItems()
+            => _mediator.Send(new GetCartItems.Query());
 
         [HttpPost]
         public Task<CartItemResponse> AddOrUpdateCartItem([FromBody] AddOrUpdateCartItem.Command command)
@@ -34,5 +34,9 @@ namespace API.Controllers.Cart
         [HttpGet("summary")]
         public Task<CartSummaryResponse> GetCartSummary()
             => _mediator.Send(new GetCartSummary.Query());
+
+        [HttpPost("checkout")]
+        public Task CheckoutCart()
+            => _mediator.Send(new CheckoutCart.CheckoutCommand());
     }
 }

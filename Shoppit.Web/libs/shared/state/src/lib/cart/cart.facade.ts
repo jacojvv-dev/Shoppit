@@ -27,4 +27,8 @@ export class CartFacade {
   getCart() {
     this.store.dispatch(CartActions.init());
   }
+
+  checkout() {
+    this.store.dispatch(CartActions.checkoutCart());
+  }
 }

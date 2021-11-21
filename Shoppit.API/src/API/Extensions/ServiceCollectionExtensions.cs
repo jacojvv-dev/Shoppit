@@ -45,6 +45,7 @@ namespace API.Extensions
             IConfiguration configuration)
         {
             serviceCollection.Configure<ElasticSearchOptions>(configuration.GetSection("ElasticSearch"));
+            serviceCollection.Configure<SendGridOptions>(configuration.GetSection("Sendgrid"));
         }
 
 
@@ -54,6 +55,7 @@ namespace API.Extensions
         {
             serviceCollection.AddScoped<IElasticSearchService, ElasticSearchService>();
             serviceCollection.AddScoped<IElasticProductService, ElasticProductService>();
+            serviceCollection.AddScoped<IEmailSender, EmailSender>();
 
             serviceCollection.AddHostedService<ProductSeeder>();
         }

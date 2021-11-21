@@ -28,7 +28,9 @@
             <td>
               <a
                 href="javascript:void(0)"
-                (click)="onUpdateClicked(item.id, item.quantity, updateQuantity)"
+                (click)="
+                  onUpdateClicked(item.id, item.quantity, updateQuantity)
+                "
                 >Update</a
               >
             </td>
@@ -60,6 +62,14 @@
           </tr>
         </tfoot>
       </table>
+
+      <button
+        type="button"
+        class="btn btn-outline-success ml-auto"
+        (click)="onCheckoutClicked()"
+      >
+        Checkout
+      </button>
     </ng-template>
   </div>
 </ng-container>

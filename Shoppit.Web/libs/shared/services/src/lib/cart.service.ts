@@ -38,4 +38,8 @@ export class CartService {
   removeCartItem(id: string) {
     return this.httpClient.delete(`${this.base}/api/Cart/${id}`);
   }
+
+  checkout() {
+    return this.httpClient.post(`${this.base}/api/Cart/Checkout`, {});
+  }
 }

@@ -25,11 +25,13 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="App_Data\images" />
-  </ItemGroup>
-
-  <ItemGroup>
     <None Update="App_Data\product_data.zip">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="App_Data\EmailTemplates\OrderReceipt.html">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="App_Data\EmailTemplates\OrderReceiptItem.html">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>

@@ -37,6 +37,11 @@ export class CartIndexComponent implements OnInit {
     this.open(content);
   }
 
+  onCheckoutClicked() {
+    console.log('xxxx');
+    this.cartFacade.checkout();
+  }
+
   private open(content: any) {
     this.modalService
       .open(content, { ariaLabelledBy: 'modal-basic-title' })
